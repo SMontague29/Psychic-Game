@@ -34,7 +34,7 @@
             <li class="list-group-item"><p id="wins">Wins: </p></li>
             <li class="list-group-item"><p id="losses">Losses: </p></li>
             <li class="list-group-item"><p id="guessLeft">Guesses Left: </p></li>
-            <li class="list-group-item"><p id="soFar">Your Guesses so far: </p></li>
+            <li class="list-group-item"><p id="sofar">Your Guesses so far: </p></li>
           </ul>
         </div>
         <div class="col-md-3">
@@ -51,7 +51,6 @@
         </footer>
       </div>
     </div>
-
     <script type="text/javascript">
 
 
@@ -66,6 +65,8 @@
     var letterToGuess = null;
 
 
+
+    //Lets the computer select a random letter from the available choices
     var computerGuess = computerChoices[Math.floor(Math.random() * computerChoices.length)];
 
     var updateGuessesLeft = function() {
@@ -78,8 +79,50 @@
     };
     var updateGuessesSoFar = function() {
 
-      document.querySelector('#soFar').innerHTML = "Your Guesses so far: " + guessedLetters.join(' ');
+      document.querySelector('#sofar').innerHTML = "Your Guesses so far: " + guessedLetters.join(' ');
     };
+    // Function will be called when we reset everything
+    var reset = function() {
+      totalGuesses = 9;
+      guessesLeft = 9;
+      guessedLetters = [];
+
+      updateLetterToGuess();
+      updateGuessesLeft();
+      updateGuessesSoFar();
+    }
+
+    updateLetterToGuess();
+    updateGuessesLeft();
+
+
+    //When key is released it becomes the users guess
+    document.onkeyup = function(event) {
+        guessesLeft--;
+      var userGuess = String.fromCharCode(event.keyCode).toLowerCase();
+
+      guessedLetters.push(userGuess);
+      updateGuessesLeft();
+      updateGuessesSoFar();
+
+            if (guessesLeft > 0){
+                if (userGuess == letterToGuess){
+                    wins++;
+                    document.querySelector('#wins').innerHTML = "Wins: " + wins;
+                    alert("Don't read my thoughts...");
+                    reset();
+                }
+            }else if(guessesLeft == 0){
+                // Then we will loss and we'll update the html to display the loss
+                losses++;
+                document.querySelector('#losses').innerHTML = "Losses: " + losses;
+                alert("Rough tough real stuff, you lost, try again perhaps.");
+                // Then we'll call the reset.
+                reset();
+            }
+    };
+
     </script>
-  </body>
+</body>
+
 </html>
